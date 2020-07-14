@@ -15,9 +15,22 @@ var connection = mysql.createConnection({
     database: "employee_db"
 });
 
-connection.connect(function(err) {
+connection.connect(async function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
+    try{
+        var choices = ["Quit"];
+        do{
+            var selection = await inquirer.prompt(
+                {type:"list",message:"What would you like to do?", choices:choices, name:"option"}
+            );
+
+        }while(selection.option !== "Quit")
+
+    }catch (err){
+        console.log(err);
+    }
+
     afterConnection();
 });
 
