@@ -67,12 +67,12 @@ class ORM {
 }
 
 module.exports = new ORM(connection);
-
+/*
 const test = new ORM(connection);
 /*
 test.create("department", ["name"],["R&D"])
 .then(results => console.table(results));
-*/
+
 test.update("employee", "role_id", 3, "id", 2)
 .then(results => console.table(results));
 
@@ -83,4 +83,4 @@ test.select(["name"], "department")
 test.leftJoin(["first_name","last_name","title","salary"], "employee","role","role_id","id")
 .then(results => console.table(results));
 
-test.connection.end();
+test.connection.end();*/
