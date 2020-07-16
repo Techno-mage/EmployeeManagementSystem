@@ -1,7 +1,8 @@
-var mysql = require("mysql");
+//var mysql = require("mysql");
 const inquirer = require("inquirer");
 //const cTable = require('console.table');
-
+const orm = require("./config/orm")
+/*
 var connection = mysql.createConnection({
     host: "localhost",
   
@@ -15,7 +16,72 @@ var connection = mysql.createConnection({
     password: "Sch@@123",
     database: "employee_db"
 });
+*/
+var choices = ["View departments", "View Roles", "View Employees", "Quit"];
 
+async function intit(){
+  try {
+
+    do {
+      var selection = await inquirer.prompt(
+        { type: "list", message: "What would you like to do?", choices: choices, name: "option" }
+      );
+      switch (selection.option) {
+        case "View departments":
+          orm.selectAll("department")
+          .then(results => console.log(results))
+          .catch(err => console.log(err))
+          break;
+        case "View Roles":
+          orm.selectAll("role")
+          .then(results => console.log(results))
+          break;
+        case "View Employees":
+          orm.selectAll("employee")
+          .then(results => console.log(results))
+      }
+
+    } while (selection.option !== "Quit")
+  } catch (err) {console.log(err)}
+
+  orm.connection.end();
+
+}
+
+intit();
+
+/*
+async function getPrompt() {
+  try {
+   var choices = ["View departments", "View Roles", "View Employees", "Quit"];
+    var  selection = await inquirer.prompt(
+      { type: "list", message: "What would you like to do?", choices: choices, name: "option" }
+    );
+    return selection.option;
+  } catch (err) { console.log(err) }
+
+}
+//var choices = ["View departments", "View Roles", "View Employees", "Quit"];
+do {
+  //var selection = await inquirer.prompt(
+  //  { type: "list", message: "What would you like to do?", choices: choices, name: "option" }
+  // );
+  var selection = getPrompt();
+  //console.log("\n\n\n");
+  switch (selection) {
+    case "View departments":
+      console.table(orm.selectAll("department"));
+      break;
+    case "View Roles":
+      console.table(orm.selectAll("role"));
+      break;
+    case "View Employees":
+      console.table(orm.selectAll("employee"));
+  }
+
+} while (selection !== "Quit")
+
+/*
 connection.connect(async function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
@@ -54,25 +120,25 @@ async function viewContent(type) {
     console.log("\n")
     console.table(res);
     console.log("\n\n\n");
-    
+
   });
 }
 function afterConnection() {
     connection.query("SELECT * FROM department", function(err, res) {
       if (err) throw err;
       console.table(res);
-      
+
     });
     connection.query("SELECT * FROM role", function(err, res) {
       if (err) throw err;
       console.table(res);
-        
+
     });
     connection.query("SELECT * FROM employee", function(err, res) {
       if (err) throw err;
       console.table(res);
-        
+
     });
-    
+
     connection.end();
-  }
+  }*/
