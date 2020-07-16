@@ -19,6 +19,12 @@ var connection = mysql.createConnection({
 */
 var choices = ["View departments", "View Roles", "View Employees", "Quit"];
 
+function formatOutput(data){
+  console.log("\n\n")
+  console.table(data)
+  console.log("\n\n\n")
+
+}
 async function intit(){
   try {
 
@@ -29,16 +35,16 @@ async function intit(){
       switch (selection.option) {
         case "View departments":
           orm.selectAll("department")
-          .then(results => console.log(results))
-          .catch(err => console.log(err))
+          .then(results => formatOutput(results))
+          
           break;
         case "View Roles":
           orm.selectAll("role")
-          .then(results => console.log(results))
+          .then(results => formatOutput(results))
           break;
         case "View Employees":
           orm.selectAll("employee")
-          .then(results => console.log(results))
+          .then(results => formatOutput(results))
       }
 
     } while (selection.option !== "Quit")
