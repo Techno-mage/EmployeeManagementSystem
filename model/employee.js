@@ -82,12 +82,62 @@ function addRole(){
 //INSERT INTO employee(first_name, Last_name, role_id, manager_id) values (?, ?, ?, ?)
 //Inquirer List: employee's role,
 //: Enter employee's first name, then Last name
+async function addEmployee(){
 
+    res1 = await orm.selectAll("role")
+    res2 = await orm.selectAll("employee")
+
+    //console.log(res1)
+    //console.log(res2)
+    var roleOptions = res1.map((re)=>{return re.title})
+
+    var managerOptions = res2.map((r) => {return r.first_name + " "+ r.last_name})
+    managerOptions.push("none")
+
+
+    console.log(roleOptions)
+    console.log(managerOptions)
+    
+    var questions = [
+        {type:"input", message:"What is the employee's first name?", name:"first"},
+        {type:"input", message:"What is the employee's last name?", name:"last"},
+        {type:"list", message:"what is the employee's role?", choices:roleOptions, name:"role"},
+        {type:"list", message:"Does the empoyee have a manager?", choices:managerOptions, name: "manager"}
+    ]
+    res3 = await inquirer.prompt(questions)
+    var role;
+    var manager;
+
+    console.log(res3)
+    for (item of res1){
+        if (item.title === res3.role){
+            role = item.id;
+        }
+    }
+    if(res3.manager == "none"){
+        manager = null;
+    }
+    for (item of res2){
+        //console.log(item.first_name+" "+item.last_name)
+        //console.log(res3.manager)
+        if ((item.first_name+" "+item.last_name) === res3.manager){
+            console.log("triggered")
+            manager = item.id;
+        }
+    }
+    //console.log(role)
+    //console.log(manager)
+
+    var res4 = await orm.create("employee", ["first_name","last_name","role_id","manager_id"],[res3.first, res3.last, role, manager])
+    console.table(res4)
+
+
+}
 
 //update employee roles
 //UPDATE employee SET role_id WHERE id = ?
-
-addRole();
+addEmployee()
+//addRole();
 //addDepartment();
 //viewEmployees();
 //viewDepartments();
