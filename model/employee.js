@@ -7,15 +7,18 @@ const util = require("util")
 //SELECT first_name, last_name, title, salary, name FROM employee 
 //LEFT JOIN role on employee.role_id = role.id
 //LEFT JOIN department on role.department_id = department.id;
-function viewEmployees(){
-    orm.leftJoin(["first_name","last_name","title"], "employee", "role", "role_id", "id")
+class Employee{
+    
+
+async viewEmployees(){
+    await orm.leftJoin(["first_name","last_name","title"], "employee", "role", "role_id", "id")
     .then(results => console.table(results));
 }
 
 //view department
 //Select name FROM Department
-function viewDepartments(){
-    orm.select(["name"], "department")
+ async viewDepartments(){
+    await orm.select(["name"], "department")
     .then(results => console.table(results));
 }
 
@@ -23,15 +26,15 @@ function viewDepartments(){
 //view Role
 //SELECT title, salary, name, FROM role 
 //LEFT JOIN department on role.department_id = department.id
-function viewRoles(){
-    orm.leftJoin(["title", "salary", "name"], "role", "department", "department_id", "id")
+ async viewRoles(){
+    await orm.leftJoin(["title", "salary", "name"], "role", "department", "department_id", "id")
     .then(results => console.table(results));
 }
 
 //add department
 //INSERT INTO department(name) values (?)
 //inquirer "Enter department name"
-function addDepartment(){
+ async addDepartment(){
     inquirer.prompt({type:"input", message:"What is the department called?", name:"dept"})
     .then(results => {
         orm.create("department", ["name"],[results.dept])
@@ -45,7 +48,7 @@ function addDepartment(){
 //INSERT INTO (title, salary, department_id) values (?, ?, ?)
 //inquirer List: list department role belongs to
 //:name role
-function addRole(){
+ async addRole(){
     orm.selectAll("department")
     .then(results => {
         const res = results;
@@ -82,7 +85,7 @@ function addRole(){
 //INSERT INTO employee(first_name, Last_name, role_id, manager_id) values (?, ?, ?, ?)
 //Inquirer List: employee's role,
 //: Enter employee's first name, then Last name
-async function addEmployee(){
+async  addEmployee(){
 
     res1 = await orm.selectAll("role")
     res2 = await orm.selectAll("employee")
@@ -136,7 +139,7 @@ async function addEmployee(){
 
 //update employee roles
 //UPDATE employee SET role_id WHERE id = ?
-async function updateEmployeeRole(){
+async  updateEmployeeRole(){
     res1 = await orm.selectAll("role")
     res2 = await orm.selectAll("employee")
 
@@ -175,7 +178,14 @@ async function updateEmployeeRole(){
 
 
 }
-updateEmployeeRole()
+endConnection(){
+    orm.connection.end()
+}
+
+}
+
+module.exports = new Employee()
+//updateEmployeeRole()
 //addEmployee()
 //addRole();
 //addDepartment();

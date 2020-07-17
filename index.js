@@ -1,7 +1,8 @@
 //var mysql = require("mysql");
 const inquirer = require("inquirer");
 //const cTable = require('console.table');
-const orm = require("./config/orm")
+//const orm = require("./config/orm")
+const employee = require("./model/employee")
 /*
 var connection = mysql.createConnection({
     host: "localhost",
@@ -34,23 +35,41 @@ async function intit(){
       );
       switch (selection.option) {
         case "View departments":
+
+          
+          await employee.viewDepartments()
+          //.then(res => {console.log("done")})
+          
+
+          
+          /*
           orm.selectAll("department")
           .then(results => formatOutput(results))
-          
+          */
           break;
         case "View Roles":
+          
+          await employee.viewRoles();
+          
+          /*
           orm.selectAll("role")
           .then(results => formatOutput(results))
+          */
           break;
         case "View Employees":
+          
+          await employee.viewEmployees();
+          
+          /*
           orm.selectAll("employee")
           .then(results => formatOutput(results))
+          */
       }
 
     } while (selection.option !== "Quit")
   } catch (err) {console.log(err)}
 
-  orm.connection.end();
+  employee.endConnection();
 
 }
 
