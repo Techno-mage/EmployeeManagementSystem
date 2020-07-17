@@ -136,7 +136,47 @@ async function addEmployee(){
 
 //update employee roles
 //UPDATE employee SET role_id WHERE id = ?
-addEmployee()
+async function updateEmployeeRole(){
+    res1 = await orm.selectAll("role")
+    res2 = await orm.selectAll("employee")
+
+    var roleOptions = res1.map((re)=>{return re.title})
+
+    var employeeOptions = res2.map((r) => {return r.first_name + " "+ r.last_name})
+
+    var questions = [
+        {type:"list", message:"what employee do you want to update?", choices:employeeOptions, name:"employee"},
+        {type:"list", message:"what is th employee's new role?", choices:roleOptions, name: "role"}
+    ]
+    var res3 = await inquirer.prompt(questions);
+
+    var role;
+    var employee;
+
+    for (item of res1){
+        if (item.title === res3.role){
+            role = item.id;
+        }
+    }
+    for (item of res2){
+        //console.log(item.first_name+" "+item.last_name)
+        //console.log(res3.manager)
+        if ((item.first_name+" "+item.last_name) === res3.employee){
+            console.log("triggered")
+            employee = item.id;
+        }
+    }
+
+    orm.update("employee", "role_id", role, "id", employee)
+    .then(results => {
+        console.table(results)
+    })
+
+
+
+}
+updateEmployeeRole()
+//addEmployee()
 //addRole();
 //addDepartment();
 //viewEmployees();
