@@ -28,7 +28,7 @@ class ORM {
     
 
     selectAll(table) {
-        console.log(typeof table);
+        //console.log(typeof table);
         const queryString = 'SELECT * FROM  ??';
         return this.connection.query(queryString, [table])
     }
@@ -51,8 +51,8 @@ class ORM {
 
     create(table, variables, values){
         const queryString = `INSERT INTO ??(${variables.join(', ')}) VALUES (${this.printQuestionMarks(values.length)})`
-        console.log(queryString)
-        console.log([table].concat(variables.concat(values)))
+        //console.log(queryString)
+        //console.log([table].concat(variables.concat(values)))
         return this.connection.query(queryString, [table, ...values])
     }
     update(table, col, colValue, comp, compValue){
@@ -67,20 +67,3 @@ class ORM {
 }
 
 module.exports = new ORM(connection);
-/*
-const test = new ORM(connection);
-/*
-test.create("department", ["name"],["R&D"])
-.then(results => console.table(results));
-
-test.update("employee", "role_id", 3, "id", 2)
-.then(results => console.table(results));
-
-test.select(["name"], "department")
-.then(results => console.table(results));
-
-
-test.leftJoin(["first_name","last_name","title","salary"], "employee","role","role_id","id")
-.then(results => console.table(results));
-
-test.connection.end();*/

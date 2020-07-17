@@ -35,13 +35,20 @@ class Employee {
     //INSERT INTO department(name) values (?)
     //inquirer "Enter department name"
     async addDepartment() {
-        await inquirer.prompt({ type: "input", message: "What is the department called?", name: "dept" })
-            .then(results => {
-                orm.create("department", ["name"], [results.dept])
+        var res1 = await inquirer.prompt({ type: "input", message: "What is the department called?", name: "dept" })
+
+        await orm.create("department", ["name"], [res1.dept])
+            .then(res2 => {
+                
+                if (res2.affectedRows ===0){
+                    console.log("error in handling add request")
+                } else (
+                    console.log("department added.")
+                )
+                //console.table(res2)
             })
-            .then(results => {
-                console.table(results)
-            })
+
+
     }
 
     //add role
@@ -63,25 +70,28 @@ class Employee {
         var res2 = await inquirer.prompt(questions)
         var department;
 
-        console.log(res2)
-        console.log(res)
+        //console.log(res2)
+        //console.log(res)
         for (let item of res) {
             if (item.name === res2.dept) {
-                console.log(results.id)
+                //console.log(results.id)
                 department = item.id;
                 //orm.create("role", ["title", "salary", "department_id"], [results.role, parseInt(results.salary), parseInt(item.id)])
             }
         }
 
-            //orm.create("role", ["title", "salary", "department_id"],[results.role, results.salary, dep])
+        //orm.create("role", ["title", "salary", "department_id"],[results.role, results.salary, dep])
         await orm.create("role", ["title", "salary", "department_id"], [res2.role, parseInt(res2.salary), parseInt(department)])
-        .then(results => console.log(results))
+            .then(results => {
+                if (results.affectedRows === 0) {
+                    console.log("error in handling add request")
+                } else (
+                    console.log("role added.")
+                )
+                //console.log(results)
+            })
 
-        /*   
-        .then(results => {
-            console.log(results)
-            //orm.create("role", ["title", "salary", "department_id"],[])
-        })*/
+
 
     }
     //add Employee
@@ -101,8 +111,8 @@ class Employee {
         managerOptions.push("none")
 
 
-        console.log(roleOptions)
-        console.log(managerOptions)
+        //console.log(roleOptions)
+        //console.log(managerOptions)
 
         var questions = [
             { type: "input", message: "What is the employee's first name?", name: "first" },
@@ -127,7 +137,7 @@ class Employee {
             //console.log(item.first_name+" "+item.last_name)
             //console.log(res3.manager)
             if ((item.first_name + " " + item.last_name) === res3.manager) {
-                console.log("triggered")
+                //console.log("triggered")
                 manager = item.id;
             }
         }
@@ -135,7 +145,12 @@ class Employee {
         //console.log(manager)
 
         var res4 = await orm.create("employee", ["first_name", "last_name", "role_id", "manager_id"], [res3.first, res3.last, role, manager])
-        console.table(res4)
+        if (res4.affectedRows === 0) {
+            console.log("error in handling add request")
+        } else (
+            console.log("employee added.")
+        )
+        //console.table(res4)
 
 
     }
@@ -152,7 +167,7 @@ class Employee {
 
         var questions = [
             { type: "list", message: "what employee do you want to update?", choices: employeeOptions, name: "employee" },
-            { type: "list", message: "what is th employee's new role?", choices: roleOptions, name: "role" }
+            { type: "list", message: "what is the employee's new role?", choices: roleOptions, name: "role" }
         ]
         var res3 = await inquirer.prompt(questions);
 
@@ -168,14 +183,19 @@ class Employee {
             //console.log(item.first_name+" "+item.last_name)
             //console.log(res3.manager)
             if ((item.first_name + " " + item.last_name) === res3.employee) {
-                console.log("triggered")
+                //console.log("triggered")
                 employee = item.id;
             }
         }
 
         await orm.update("employee", "role_id", role, "id", employee)
             .then(results => {
-                console.table(results)
+                if (results.affectedRows === 0) {
+                    console.log("error in handling add request")
+                } else (
+                    console.log("employee updated")
+                )
+                //console.table(results)
             })
 
 
@@ -188,12 +208,3 @@ class Employee {
 }
 
 module.exports = new Employee()
-//updateEmployeeRole()
-//addEmployee()
-//addRole();
-//addDepartment();
-//viewEmployees();
-//viewDepartments();
-//viewRoles();
-
-//orm.connection.end()
