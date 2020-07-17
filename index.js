@@ -18,7 +18,7 @@ var connection = mysql.createConnection({
     database: "employee_db"
 });
 */
-var choices = ["View departments", "View Roles", "View Employees", "Quit"];
+var choices = ["View departments", "View Roles", "View Employees","add department","add Role","add employee","update employee role", "Quit"];
 
 function formatOutput(data){
   console.log("\n\n")
@@ -35,35 +35,31 @@ async function intit(){
       );
       switch (selection.option) {
         case "View departments":
-
-          
           await employee.viewDepartments()
           //.then(res => {console.log("done")})
           
-
-          
-          /*
-          orm.selectAll("department")
-          .then(results => formatOutput(results))
-          */
           break;
         case "View Roles":
           
           await employee.viewRoles();
           
-          /*
-          orm.selectAll("role")
-          .then(results => formatOutput(results))
-          */
           break;
         case "View Employees":
           
           await employee.viewEmployees();
-          
-          /*
-          orm.selectAll("employee")
-          .then(results => formatOutput(results))
-          */
+          break;
+        case "add Role":
+          await employee.addRole()
+          break;
+        case "add department":
+          await employee.addDepartment()
+          break;
+        case "add employee":
+          await employee.addEmployee();
+          break;
+        case "update employee role":
+          await employee.updateEmployeeRole();
+          break;
       }
 
     } while (selection.option !== "Quit")
